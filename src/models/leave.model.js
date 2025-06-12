@@ -25,3 +25,20 @@ exports.createLeaves = async (LeaveData) =>{
     return result.insertId
 }
 
+exports.getLeavesByStatus = async (status,role_id,employee_id) =>{
+    if(role_id === 1){
+
+        const [rows] = await db.query(
+            `select * from Leaves where status = ? and employee_id = ? `,
+            [status,employee_id]
+        )
+        return rows
+    }
+    else {
+        const [rows] = db.query(
+            `select * from Leaves where status = ?`,
+            [status]
+        );
+        return rows
+    }
+}

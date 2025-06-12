@@ -62,3 +62,24 @@ exports.applyLeave = async (req,res) => {
     res.status(500).json({ sucess: false, error: "Database error" });
   }
 };
+
+exports.getLeavesByStatus = async(req,res) =>{
+
+    const {status} = req.query;
+
+    const  {id:employee_id,role_id} = req.employee;
+
+    if(!status){
+        res.status(401).json({success:false,message:"Status is required"})
+    }
+
+    try {
+        
+         const leaves = await Leavemodel.getLeavesByStatus(status,employee_id,role_id)
+
+         res.status(201).json({success:true,data:leaves})
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({success:false,message:error})
+    }
+}
