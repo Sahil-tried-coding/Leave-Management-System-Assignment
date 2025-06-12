@@ -9,8 +9,8 @@ exports.createLeaves = async (LeaveData) =>{
         employee_id,
         role_id,
         leave_type,
-        start_type,
-        end_type,
+        start_date,
+        end_date,
         reason,
         created_by
     } = LeaveData;
@@ -24,3 +24,4 @@ exports.createLeaves = async (LeaveData) =>{
 
     return result.insertId
 }
+

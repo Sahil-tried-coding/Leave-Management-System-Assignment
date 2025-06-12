@@ -4,7 +4,7 @@ const app = express()
 
 const leaveRoute = require("./routes/leave.routes")
 
-app.use(express.json())
+app.use(express.json());
 
 app.use("/api/leaves",leaveRoute)
 
