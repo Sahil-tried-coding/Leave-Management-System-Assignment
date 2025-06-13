@@ -167,6 +167,31 @@ Change `role_id` to `2` to simulate admin access.
 
 ---
 
+
+
+
+
+---
+
+## 📐 Design Questions
+
+### 1. How would you design this system if it were to go live in production?
+
+> I would  normalize the database by keeping roles, users, and leave data in separate tables with proper relationships. Backend validation would be handled using a library like express-validator, and error handling would be centralized so it’s easy to debug issues.
+> Security-wise, I’d make sure inputs are sanitized and passwords (if added) are hashed. For deployment
+
+### 2. What features would you add to improve it?
+
+> To improve the system, I would first add a leave quota system, so employees can’t apply beyond their allowed limit. Right now, any number of leaves can be requested.
+> I’d also implement file uploads (e.g., for medical certificates) and notifications via email when a leave is applied or approved/rejected. Another improvement would be a leave history log , so every action taken on a leave is recorded.
+
+
+
+
+
+
+
+
 ## 👨‍💼 Author
 
 **Sahil Dadabhai Shaikh**
