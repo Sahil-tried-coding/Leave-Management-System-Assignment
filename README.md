@@ -1,151 +1,181 @@
-- Leave Management System – Express.js + MySQL
+#  Leave Management System – Express.js + MySQL
 
-This is a backend API built with Express.js and MySQL for managing employee leave requests. It supports role-based access (Employee, HR/Admin), leave approval and rejection, and validations.
+This is a backend API built with **Express.js** and **MySQL** for managing employee leave requests. It supports role-based access (Employee, HR/Admin), leave approval and rejection, and validation rules.
 
-- Features
+---
 
-  Apply for leave (POST)
+## ✅ Features
 
-  Get all leave requests filtered by status and role (GET)
+* Apply for leave (`POST /api/leaves`)
+* Get leave requests filtered by role and status (`GET /api/leaves?status=pending`)
+* Approve or Reject leave requests (`PATCH /api/leaves/:id`)
+* Role-based access control using middleware
+* Fully integrated with MySQL database
 
-  Approve/Reject leaves by ID (PATCH)
+---
 
-  Role-based access control using middleware
+## 📁 Project Structure
 
-  Fully connected to MySQL database
-
-📁 Project Structure
-
+```
 Leave-Management-System-Assignment/
 ├── .env
 ├── server.js
 ├── README.md
 ├── package.json
-├──  src/
-│ ├── app.js
-│ ├── config/
-│ │ └── db.js
-│ ├── controllers/
-│ │ └── leave.control.js
-│ ├── models/
-│ │ └── leave.model.js
-│ ├── routes/
-│ │ └── leave.routes.js
-│ └── middleware/
-│ └── auth.js
+├── src/
+│   ├── app.js
+│   ├── config/
+│   │   └── db.js
+│   ├── controllers/
+│   │   └── leave.control.js
+│   ├── models/
+│   │   └── leave.model.js
+│   ├── routes/
+│   │   └── leave.routes.js
+│   └── middleware/
+│       └── auth.js
+```
 
-- Setup Instructions
+---
 
-    1. Clone the project and install dependencies
+## ⚙️ Setup Instructions
 
-        npm install
+### 1. Install dependencies
 
-    2. Configure environment variables
+```bash
+npm install
+```
 
-        Create a .env file in the root folder:
+### 2. Create a `.env` file in the root directory:
 
-        PORT=3000
-        DB_HOST=localhost
-        DB_USER=mysql_username
-        DB_PASSWORD=mysql_password
-        DB_NAME=leave_management_system
+```env
+PORT=3000
+DB_HOST=localhost
+DB_USER=your_mysql_username
+DB_PASSWORD=your_mysql_password
+DB_NAME=leave_management_system
+```
 
-3. Create the MySQL database
+### 3. Set up MySQL Database
 
-    create database leave_management_system;
+```sql
+CREATE DATABASE leave_management_system;
 
-    use leave_management_system;
+USE leave_management_system;
 
-    create table Leaves(
-    id int auto_increment primary key ,
-    employee_id  int not null,
-    role_id int not null ,
-    leave_type enum("Annual","Sick","Casual","Maternity","Paternity") not null,
-    start_date date not null,
-    end_date date not null,
-    reason varchar(2000) not null,
-    status  enum ("pending","approved","rejected") default "pending" not null,
-    comment varchar(250),
-    document_url varchar(255),
-    created_by int not null,
-    updated_by int ,
-    created_at timestamp default current_timestamp not null,
-    updated_at timestamp default current_timestamp not null on update current_timestamp
-    );
+CREATE TABLE Leaves (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  employee_id INT NOT NULL,
+  role_id INT NOT NULL,
+  leave_type ENUM("Annual","Sick","Casual","Maternity","Paternity") NOT NULL,
+  start_date DATE NOT NULL,
+  end_date DATE NOT NULL,
+  reason VARCHAR(2000) NOT NULL,
+  status ENUM("pending","approved","rejected") DEFAULT "pending" NOT NULL,
+  comment VARCHAR(250),
+  document_url VARCHAR(255),
+  created_by INT NOT NULL,
+  updated_by INT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+```
 
-4. Start the server
+### 4. Start the server
 
-    node server.js
+```bash
+node server.js
+```
 
-- Simulated Auth Middleware
+---
 
-Located in src/middleware/auth.js. It injects a dummy user into every request:
+## 🔐 Simulated Auth Middleware
 
+Located in `src/middleware/auth.js`. It simulates a logged-in user:
+
+```js
 req.employee = {
-id: 1,
-name: "Sahil",
-role_id: 1 // 1 = employee, 2 = HR/Admin
+  id: 1,
+  name: "Sahil",
+  role_id: 1 // 1 = employee, 2 = HR/Admin
 };
+```
 
-Change role_id to 2 to simulate Admin/HR actions.
+Change `role_id` to `2` to simulate admin access.
 
-🚀 API Endpoints
+---
 
-📌 Apply Leave
+## 🚀 API Endpoints
 
-  POST /api/leaves
-    
-  {
-        "leave_type": "Annual",
-        "start_date": "2025-06-20",
-        "end_date": "2025-06-25",
-        "reason": "Family trip",
-        "role_id": 1
-  }
+### 📌 Apply Leave
 
-📌 Get Leave Requests by Status
+`POST /api/leaves`
 
-  GET /api/leaves?status=pending
+```json
+{
+  "leave_type": "Annual",
+  "start_date": "2025-06-20",
+  "end_date": "2025-06-25",
+  "reason": "Family trip",
+  "role_id": 1
+}
+```
 
-  Employees see only their leaves
+---
 
-  HR/Admin sees all leaves
+### 📌 Get Leave Requests by Status
 
-📌 Approve/Reject Leave
+`GET /api/leaves?status=pending`
 
-  PATCH /api/leaves/:id
+* Employees see only their own leaves
+* HR/Admin sees all matching leaves
 
-  {
-    "status": "approved",
-    "approvedBy": 2
-  }
+---
 
-  {
-    "status": "rejected",
-    "comment": "project deadline is near",
-    "approvedBy": 2
-  }
+### 📌 Approve or Reject Leave
 
-✅ Validations
+`PATCH /api/leaves/:id`
 
-  All fields are required when applying
+✅ Approve:
 
-  start_date must be before end_date
+```json
+{
+  "status": "approved",
+  "approvedBy": 2
+}
+```
 
-  role_id must match the logged-in user
+❌ Reject:
 
-  Only pending leaves can be approved/rejected
+```json
+{
+  "status": "rejected",
+  "comment": "Project deadline is near",
+  "approvedBy": 2
+}
+```
 
-  Rejected leaves require a comment
+---
 
-- Author
+## ✅ Validations
 
-  Sahil Dadabhai Shaikh  
+* All fields are required when applying
+* `start_date` must be before `end_date`
+* `role_id` must match the logged-in user
+* Only pending leaves can be approved or rejected
+* Rejected leaves must include a comment
 
-📦 Submission Notes
+---
 
-  Backend API fully implemented as per assignment
+## 👨‍💼 Author
 
-  All routes tested and working via Postman
+**Sahil Dadabhai Shaikh**
 
-  .env file excluded for security (send credentials separately if needed)
+
+---
+
+## 📦 Submission Notes
+
+* Backend API fully implemented as per the assignment
+* All endpoints tested using Postman
+* `.env` file excluded from submission for security
