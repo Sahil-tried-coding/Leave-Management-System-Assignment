@@ -40,10 +40,12 @@ Leave-Management-System-Assignment/
 
 ## ⚙️ Setup Instructions
 
-### 1. Install dependencies
+1. Clone the repo  
+2. Run the following to install dependencies:
 
 ```bash
-npm install
+npm install express mysql2 dotenv nodemon
+
 ```
 
 ### 2. Create a `.env` file in the root directory:
