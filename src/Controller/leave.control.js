@@ -83,3 +83,29 @@ exports.getLeavesByStatus = async(req,res) =>{
         res.status(500).json({success:false,message:error})
     }
 }
+
+
+exports.updateLeaveStatus = async(req,res)=>{
+ const {id} = req.params;
+ const{comment,status,approvedBy} = req.body;
+ 
+ if(!["approved","rejected"].includes(status)){
+  return rea.status(400).json({success:false,error:"Invalid status"});
+
+
+ }
+
+ if(status === "rejected" && (!comment || comment.trim() === "")){
+  return res.status(400).json({success:false,error:"Comment required for rejection"});
+
+ }
+
+ try {
+  await Leavemodel.updateLeaveStatus(id,status,comment || null, approvedBy);
+  res.status(200).json({success:true,message:`Leave ${status}`});
+ } catch (error) {
+  console.log(error)
+  res.status(400).json({success:false,error:error})
+  
+ }
+}

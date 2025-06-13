@@ -42,3 +42,26 @@ exports.getLeavesByStatus = async (status,role_id,employee_id) =>{
         return rows
     }
 }
+
+
+exports.updateLeaveStatus = async(id,newStatus,updatedBy,comment)=>{
+
+    const [existing] = await db.query(
+        `select status from Leaves where id = ?`,[id]
+    )
+
+    if(!existing.length) throw new Error("Leave not found");
+    const currentStatus = existing[0].status;
+
+    if(currentStatus === "approved" || currentStatus === "rejected"){
+        throw new Error("Leave is already finalized and cannot be changed")
+    }
+
+    await db.query(
+        `update Leaves
+        set status = ?,comment = ?,updated_by = ?, updated_at = now()
+        where id = ?`,[newStatus,comment,updatedBy,id]
+
+    ) 
+    return true;
+}
