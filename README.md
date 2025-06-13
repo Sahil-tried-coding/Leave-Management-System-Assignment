@@ -44,6 +44,10 @@ Leave-Management-System-Assignment/
 2. Run the following to install dependencies:
 
 ```bash
+npm install 
+```
+
+```bash
 npm install express mysql2 dotenv nodemon
 
 ```
