@@ -59,26 +59,26 @@ DB_NAME=leave_management_system
 ### 3. Set up MySQL Database
 
 ```sql
-CREATE DATABASE leave_management_system;
+  create database leave_management_system;
 
-USE leave_management_system;
+   use leave_management_system;
 
-CREATE TABLE Leaves (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  employee_id INT NOT NULL,
-  role_id INT NOT NULL,
-  leave_type ENUM("Annual","Sick","Casual","Maternity","Paternity") NOT NULL,
-  start_date DATE NOT NULL,
-  end_date DATE NOT NULL,
-  reason VARCHAR(2000) NOT NULL,
-  status ENUM("pending","approved","rejected") DEFAULT "pending" NOT NULL,
-  comment VARCHAR(250),
-  document_url VARCHAR(255),
-  created_by INT NOT NULL,
-  updated_by INT,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
+   create table Leaves(
+   id int auto_increment primary key ,
+   employee_id int not null,
+   role_id int not null ,
+   leave_type enum("Annual","Sick","Casual","Maternity","Paternity") not null,
+   start_date date not null,
+   end_date date not null,
+   reason varchar(2000) not null,
+   status enum ("pending","approved","rejected") default "pending" not null,
+   comment varchar(250),
+   document_url varchar(255),
+   created_by int not null,
+   updated_by int ,
+   created_at timestamp default current_timestamp not null,
+   updated_at timestamp default current_timestamp not null on update current_timestamp
+   );
 ```
 
 ### 4. Start the server
