@@ -209,4 +209,4 @@ Change `role_id` to `2` to simulate admin access.
 
 * Backend API fully implemented as per the assignment
 * All endpoints tested using Postman
-* `.env` file excluded from submission for security
+* `.env` file excluded from submission for security (kindly ask for credentials if needed)
