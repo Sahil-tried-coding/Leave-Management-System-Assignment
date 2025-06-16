@@ -71,7 +71,7 @@ DB_NAME=leave_management_system
 
    create table Leaves(
    id int auto_increment primary key ,
-   employee_id int not null,
+   user_id int not null,
    role_id int not null ,
    leave_type enum("Annual","Sick","Casual","Maternity","Paternity") not null,
    start_date date not null,
