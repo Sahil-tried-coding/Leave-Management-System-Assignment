@@ -3,7 +3,7 @@ const Leavemodel = require('../models/leave.model');
 // ✅ Apply Leave
 exports.applyLeave = async (req, res) => {
   const { leave_type, start_date, end_date, reason, role_id } = req.body;
-  const { id: employee_id, role_id: auth_role_id } = req.employee;
+  const { id: user_id, role_id: auth_role_id } = req.employee;
 
   if (!leave_type || !start_date || !end_date || !reason || !role_id) {
     return res.status(400).json({ success: false, error: 'All fields are required' });
@@ -19,26 +19,26 @@ exports.applyLeave = async (req, res) => {
 
   try {
     const newId = await Leavemodel.createLeaves({
-      employee_id,
+      user_id,
       role_id,
       leave_type,
       start_date,
       end_date,
       reason,
-      created_by: employee_id,
+      created_by: user_id, // ✅ fixed here
     });
 
     res.status(201).json({
       success: true,
       data: {
         id: newId,
-        employee_id,
+        user_id,
         role_id,
         leave_type,
         start_date,
         end_date,
         status: 'pending',
-        created_by: employee_id,
+        created_by: user_id,
         reason,
         created_at: new Date().toISOString(),
       },
@@ -52,7 +52,7 @@ exports.applyLeave = async (req, res) => {
 // ✅ Get Leaves Based on Role
 exports.getLeavesByStatus = async (req, res) => {
   const { status } = req.query;
-  const { id: employee_id, role_id } = req.employee;
+  const { id: user_id, role_id } = req.employee;
 
   if (!status) {
     return res.status(400).json({ success: false, message: 'Status is required' });
@@ -64,8 +64,8 @@ exports.getLeavesByStatus = async (req, res) => {
 
     switch (Number(role_id)) {
       case 1:
-        query = `SELECT * FROM Leaves WHERE status = ? AND employee_id = ?`;
-        params = [status, employee_id];
+        query = `SELECT * FROM Leaves WHERE status = ? AND user_id = ?`; // ✅ fixed here
+        params = [status, user_id];
         break;
       case 2:
         query = `SELECT * FROM Leaves WHERE status = ? AND role_id IN (1, 3)`;
